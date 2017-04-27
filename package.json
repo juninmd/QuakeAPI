@@ -1,0 +1,19 @@
+{
+  "name": "quakeapi",
+  "version": "1.0.0",
+  "description": "Serviço de consulta de logs Quake 3.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juninmd/QuakeAPI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/juninmd/QuakeAPI/issues"
+  },
+  "homepage": "https://github.com/juninmd/QuakeAPI#readme"
+}
