@@ -6,26 +6,64 @@ module.exports = (callback) => {
         }
         else {
 
-            let kills = totalKills(data);
+            let parsedFile = parseFile(data);
 
-            let retorn = {};
-            retorn["game_1"] = { totalKills: kills };
-
-            callback(null, data);
+            callback(null, parsedFile);
         }
     })
 
 }
 
-function totalKills(lines) {
-    let total = 0;
+function parseFile(lines) {
+    let rounds = 0;
+    let retorn = {};
+    let players = [];
     lines.forEach((x) => {
-        if (x.indexOf('killed') != -1)
-            return total++;
+        if (x.indexOf('InitGame') !== -1) {
+            retorn[`game_${++rounds}`] = {
+                total_kills: 0,
+                players: [],
+                kills: {}
+            }
+        }
+
+        if (x.indexOf('killed') !== -1) {
+            retorn[`game_${rounds}`].total_kills++;
+            getKills(retorn[`game_${rounds}`].kills, x);
+        }
+
+        if (x.indexOf('ClientUserinfoChanged') !== -1)
+            getPlayers(retorn[`game_${rounds}`].players, x);
     });
-    return total;
+    return retorn;
 }
 
-function getPlayersKills() {
+function getPlayers(players, x) {
+    let playername = x.split('n\\')[1].split('\\t')[0];
+    if ((players.indexOf(playername) === -1)) {
+        players.push(playername);
+    }
+}
+
+function getKills(kills, x) {
+
+    // Suícidio
+    if (x.indexOf('<world>') !== -1) {
+        let killed = x.split('killed')[1].split('by')[0].trim();
+        if (kills[killed] == null) {
+            kills[killed] = 0;
+        }
+        kills[killed]--;
+    }
+    else {
+        let killer = x.split('killed')[0].split(':')[3].trim();
+        let killed = x.split('killed')[1].split('by')[0].trim();
+
+        if (kills[killer] == null) {
+            kills[killer] = 0;
+        }
+        if (killer != killed)
+            kills[killer]++;
+    }
 
 }
