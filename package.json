@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/juninmd/QuakeAPI/issues"
   },
-  "homepage": "https://github.com/juninmd/QuakeAPI#readme"
+  "homepage": "https://github.com/juninmd/QuakeAPI#readme",
+  "devDependencies": {
+    "supertest": "^3.0.0"
+  }
 }
