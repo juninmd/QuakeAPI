@@ -33,15 +33,26 @@ function parseFile(lines) {
         }
 
         if (x.indexOf('ClientUserinfoChanged') !== -1)
-            getPlayers(retorn[`game_${rounds}`].players, x);
+            instancePlayers(retorn[`game_${rounds}`], x);
     });
     return retorn;
 }
 
-function getPlayers(players, x) {
+function instancePlayers(round, x) {
     let playername = x.split('n\\')[1].split('\\t')[0];
+    getPlayers(round.players, playername);
+    instanceKills(round.kills, playername);
+}
+
+function getPlayers(players, playername) {
     if ((players.indexOf(playername) === -1)) {
         players.push(playername);
+    }
+}
+
+function instanceKills(kills, playername) {
+    if (kills[playername] == null) {
+        kills[playername] = 0;
     }
 }
 
