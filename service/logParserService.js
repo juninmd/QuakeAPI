@@ -1,38 +1,53 @@
-module.exports = () => {
-    return new Promise((resolve, reject) => {
-        require('./logReaderService')((err, data) => {
-            if (err) {
-                reject(err);
-                return;
-            }
-            let parsedFile = parseFile(data);
-            resolve(parsedFile);
-        });
-    })
+var logReaderService = require('./logReaderService');
+
+module.exports = {
+    getParsedFile: () => {
+        return new Promise((resolve, reject) => {
+            logReaderService.readFile(`./games.log`).then(data => {
+                let parsedFile = parseFile(data);
+                return resolve(parsedFile);
+            }).catch(err => {
+                return reject(err)
+            });
+        })
+    },
+    getInitGame: (root, rounds) => {
+        return getInitGame(root, rounds);
+    },
+    getKill: (round, x) => {
+        return kill(round, x);
+    },
+    getPlayer: (round, x) => {
+        return instancePlayers(round, x);
+    }
 }
 
 function parseFile(lines) {
     let rounds = 0;
-    let retorn = {};
+    let root = {};
     let players = [];
     lines.forEach((x) => {
         if (x.indexOf('InitGame') !== -1) {
-            retorn[`game_${++rounds}`] = {
-                total_kills: 0,
-                players: [],
-                kills: {}
-            }
+            rounds = getInitGame(root, rounds);
         }
 
         if (x.indexOf('killed') !== -1) {
-            retorn[`game_${rounds}`].total_kills++;
-            getKills(retorn[`game_${rounds}`].kills, x);
+            kill(root[`game_${rounds}`], x);
         }
 
         if (x.indexOf('ClientUserinfoChanged') !== -1)
-            instancePlayers(retorn[`game_${rounds}`], x);
+            instancePlayers(root[`game_${rounds}`], x);
     });
-    return retorn;
+    return root;
+}
+
+function getInitGame(root, rounds) {
+    root[`game_${++rounds}`] = {
+        total_kills: 0,
+        players: [],
+        kills: {}
+    }
+    return rounds;
 }
 
 function instancePlayers(round, x) {
@@ -53,23 +68,26 @@ function instanceKills(kills, playername) {
     }
 }
 
+function kill(round, x) {
+    round.total_kills++;
+    getKills(round.kills, x);
+}
+
 function getKills(kills, x) {
 
     // Suícidio
     if (x.indexOf('<world>') !== -1) {
         let killed = x.split('killed')[1].split('by')[0].trim();
-        if (kills[killed] == null) {
-            kills[killed] = 0;
-        }
+        instanceKills(kills, killed);
         kills[killed]--;
     }
     else {
         let killer = x.split('killed')[0].split(':')[3].trim();
         let killed = x.split('killed')[1].split('by')[0].trim();
 
-        if (kills[killer] == null) {
-            kills[killer] = 0;
-        }
+        instanceKills(kills, killed);
+        instanceKills(kills, killer);
+
         if (killer != killed)
             kills[killer]++;
     }

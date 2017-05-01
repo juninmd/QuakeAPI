@@ -1,5 +1,5 @@
 var logParserService = require('./logParserService');
 
 module.exports = {
-    getGames: () => logParserService()
+    getGames: () => logParserService.getParsedFile()
 }
