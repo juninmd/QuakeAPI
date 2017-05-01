@@ -3,17 +3,43 @@ var app = require('../app');
 var should = require("should");
 var logReaderService = require('../service/logReaderService');
 var logParserService = require('../service/logParserService');
+var webconfig = require('../webconfig');
 
 describe("--= Api =--", () => {
 
-    it("request de todos os jogos", (done) => {
+    it("Request de todos os jogos", (done) => {
         supertest(app)
-            .get("/api/games")
+            .get(`/api/v${webconfig.version}/games`)
             .expect(200)
             .end((err, res) => {
                 res.status.should.equal(200);
                 res.body.should.have.property('game_1');
                 res.body.should.have.property('game_21');
+                Object.keys(res.body).length.should.equal(21);
+                done();
+            });
+    });
+
+    it("Request do jogo 1", (done) => {
+        supertest(app)
+            .get(`/api/v${webconfig.version}/games/1`)
+            .expect(200)
+            .end((err, res) => {
+                res.status.should.equal(200);
+                res.body.should.have.property('total_kills').equal(0);
+                res.body.should.have.property('kills');
+                res.body["kills"].should.have.property('Isgalamido').equal(0);
+                done();
+            });
+    });
+
+    it("Request de um jogo que não existe", (done) => {
+        supertest(app)
+            .get(`/api/v${webconfig.version}/games/99`)
+            .expect(200)
+            .end((err, res) => {
+                res.status.should.equal(404);
+                res.body.should.have.property('statusCode').equal(404);
                 done();
             });
     });
@@ -21,7 +47,7 @@ describe("--= Api =--", () => {
 
 describe("--= Módulos =--", () => {
 
-    it("Leitura do Arquivo", () => {
+    it("Leitura do arquivo", () => {
         return logReaderService.readFile(`./test/read.log`).then(data => {
             should.exist(data);
         })
@@ -35,7 +61,7 @@ describe("--= Módulos =--", () => {
         root.should.have.property('game_1');
     });
 
-    it("Verificar Resultado de kill", () => {
+    it("Verificar resultado de kill", () => {
         return logReaderService.readFile(`./test/killed.log`)
             .then(data => {
                 should.exist(data);
