@@ -4,7 +4,7 @@
   "description": "Serviço de consulta de logs Quake 3.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha ./test/index.js"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/juninmd/QuakeAPI#readme",
   "devDependencies": {
+    "should": "^11.2.1",
     "supertest": "^3.0.0"
   },
   "dependencies": {
