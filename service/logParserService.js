@@ -1,17 +1,14 @@
-module.exports = (callback) => {
-    require('./logReader')((err, data) => {
-        if (err) {
-            callback(err, null);
-            return;
-        }
-        else {
-
+module.exports = () => {
+    return new Promise((resolve, reject) => {
+        require('./logReaderService')((err, data) => {
+            if (err) {
+                reject(err);
+                return;
+            }
             let parsedFile = parseFile(data);
-
-            callback(null, parsedFile);
-        }
+            resolve(parsedFile);
+        });
     })
-
 }
 
 function parseFile(lines) {

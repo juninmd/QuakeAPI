@@ -18,5 +18,10 @@
   "homepage": "https://github.com/juninmd/QuakeAPI#readme",
   "devDependencies": {
     "supertest": "^3.0.0"
+  },
+  "dependencies": {
+    "express": "^4.15.2",
+    "express-load": "^1.1.15",
+    "morgan": "^1.8.1"
   }
 }
