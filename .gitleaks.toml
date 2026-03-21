@@ -1,0 +1,14 @@
+[[allowlist]]
+description = "False positive: generic-api-key in README.md"
+rules = ["generic-api-key"]
+paths = ["README.md"]
+
+[[allowlist]]
+description = "False positive: generic-api-key in README.md"
+rules = ["generic-api-key"]
+paths = ["README.md"]
+
+[[allowlist]]
+description = "False positive: generic-api-key in README.md"
+rules = ["generic-api-key"]
+paths = ["README.md"]
