@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/juninmd/QuakeAPI#readme",
   "devDependencies": {
+    "mocha": "^10.2.0",
     "should": "^11.2.1",
     "supertest": "^3.0.0"
   },
