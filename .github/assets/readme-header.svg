@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="260" viewBox="0 0 860 260" role="img" aria-labelledby="t d">
+  <title id="t">Quake Log Parser API request and response</title>
+  <desc id="d">A GET request to /api/v1/games/2 returns JSON with total_kills, players and kills parsed from games.log.</desc>
+  <rect width="860" height="260" rx="12" fill="#0d1117"/>
+  <rect x="24" y="24" width="300" height="212" rx="8" fill="#161b22" stroke="#30363d"/>
+  <text x="44" y="56" font-family="Consolas, Menlo, monospace" font-size="14" fill="#8b949e">request</text>
+  <text x="44" y="90" font-family="Consolas, Menlo, monospace" font-size="16" fill="#58a6ff">GET /api/v1/games/2</text>
+  <text x="44" y="130" font-family="Consolas, Menlo, monospace" font-size="14" fill="#8b949e">source</text>
+  <text x="44" y="160" font-family="Consolas, Menlo, monospace" font-size="16" fill="#e6edf3">games.log</text>
+  <text x="44" y="186" font-family="Consolas, Menlo, monospace" font-size="13" fill="#8b949e">Quake 3 Arena server log</text>
+  <path d="M338 130h56" stroke="#8b949e" stroke-width="2"/>
+  <path d="M388 122l10 8-10 8" fill="none" stroke="#8b949e" stroke-width="2"/>
+  <rect x="412" y="24" width="424" height="212" rx="8" fill="#161b22" stroke="#30363d"/>
+  <text x="432" y="56" font-family="Consolas, Menlo, monospace" font-size="14" fill="#8b949e">200 application/json</text>
+  <g font-family="Consolas, Menlo, monospace" font-size="15" fill="#e6edf3">
+    <text x="432" y="88">{</text>
+    <text x="452" y="114"><tspan fill="#7ee787">"total_kills"</tspan>: <tspan fill="#79c0ff">11</tspan>,</text>
+    <text x="452" y="140"><tspan fill="#7ee787">"players"</tspan>: [<tspan fill="#a5d6ff">"Isgalamido"</tspan>, <tspan fill="#a5d6ff">"Dono da Bola"</tspan>,</text>
+    <text x="548" y="162"><tspan fill="#a5d6ff">"Mocinha"</tspan>],</text>
+    <text x="452" y="188"><tspan fill="#7ee787">"kills"</tspan>: { <tspan fill="#a5d6ff">"Isgalamido"</tspan>: <tspan fill="#79c0ff">-7</tspan>, ... }</text>
+    <text x="432" y="214">}</text>
+  </g>
+</svg>
