@@ -19,8 +19,11 @@ module.exports = {
     },
     getPlayer: (round, x) => {
         return instancePlayers(round, x);
-    }
+    },
+    parseFile: (lines) => parseFile(lines)
 }
+
+const KILL_LINE = /^\s*\d+:\d+ Kill: /;
 
 function parseFile(lines) {
     let rounds = 0;
@@ -31,7 +34,7 @@ function parseFile(lines) {
             rounds = getInitGame(root, rounds);
         }
 
-        if (x.indexOf('killed') !== -1) {
+        if (KILL_LINE.test(x)) {
             kill(root[`game_${rounds}`], x);
         }
 
