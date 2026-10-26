@@ -45,6 +45,42 @@ describe("--= Api =--", () => {
     });
 });
 
+describe("--= Http =--", () => {
+
+    it("Rota inexistente responde 404 em JSON", () => {
+        return supertest(app)
+            .get(`/api/v${webconfig.version}/nada`)
+            .expect('Content-Type', /application\/json/)
+            .expect(404)
+            .then(res => {
+                res.body.should.have.property('statusCode').equal(404);
+                res.body.should.have.property('erro');
+            });
+    });
+
+    it("Pré-flight OPTIONS responde 204 com cabeçalhos CORS", () => {
+        return supertest(app)
+            .options(`/api/v${webconfig.version}/games`)
+            .expect(204)
+            .then(res => {
+                res.headers.should.have.property('access-control-allow-origin').equal('*');
+            });
+    });
+});
+
+describe("--= Parser =--", () => {
+
+    it("Linhas que não são Kill (nome ou chat com 'killed') não derrubam o parse", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:10 ClientUserinfoChanged: 2 n\\killed\\t\\0\\model\\x',
+            ' 0:20 say: "Bob": who killed me?',
+        ]);
+        root.game_1.total_kills.should.equal(0);
+        root.game_1.players.should.containEql('killed');
+    });
+});
+
 describe("--= Módulos =--", () => {
 
     it("Leitura do arquivo", () => {

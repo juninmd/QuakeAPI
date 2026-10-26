@@ -8,6 +8,8 @@ app.use(require('./cors.js'));
 
 require('./controller/quakeController')(app);
 
+app.use((req, res) => res.status(404).json({ erro: 'Rota não encontrada.', statusCode: 404 }));
+
 // O listen so acontece quando o arquivo e o entrypoint; nos testes o app e
 // importado direto pelo supertest e um servidor aberto seguraria o mocha.
 if (require.main === module) {
