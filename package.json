@@ -17,12 +17,12 @@
   },
   "homepage": "https://github.com/juninmd/QuakeAPI#readme",
   "devDependencies": {
-    "mocha": "^10.2.0",
-    "should": "^11.2.1",
-    "supertest": "^3.0.0"
+    "mocha": "^12.0.3",
+    "should": "^13.2.3",
+    "supertest": "^7.3.1"
   },
   "dependencies": {
-    "express": "^4.15.2",
-    "morgan": "^1.8.1"
+    "express": "^5.3.0",
+    "morgan": "^1.12.1"
   }
 }
