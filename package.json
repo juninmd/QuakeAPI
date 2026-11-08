@@ -22,7 +22,7 @@
     "supertest": "^3.0.0"
   },
   "dependencies": {
-    "express": "^4.15.2",
+    "express": "^4.22.0",
     "morgan": "^1.8.1"
   },
   "pnpm": {
