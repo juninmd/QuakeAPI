@@ -34,12 +34,16 @@ function parseFile(lines) {
             rounds = getInitGame(root, rounds);
         }
 
+        // Log rotacionado/truncado pode ter eventos antes do primeiro InitGame; sem partida aberta, ignora.
+        const round = root[`game_${rounds}`];
+        if (!round) return;
+
         if (KILL_LINE.test(x)) {
-            kill(root[`game_${rounds}`], x);
+            kill(round, x);
         }
 
         if (x.indexOf('ClientUserinfoChanged') !== -1)
-            instancePlayers(root[`game_${rounds}`], x);
+            instancePlayers(round, x);
     });
     return root;
 }
