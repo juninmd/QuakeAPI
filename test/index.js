@@ -141,3 +141,24 @@ describe("--= Módulos =--", () => {
             })
     });
 });
+
+describe("--= Parser (nomes com 'by' ou 'killed') =--", () => {
+
+    it("Jogador com 'by' no nome é contabilizado com o nome completo", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:10 Kill: 2 3 7: Bobby killed Gabby by MOD_ROCKET',
+            ' 0:11 Kill: 1022 3 22: <world> killed Gabby by MOD_TRIGGER_HURT',
+        ]);
+        root.game_1.total_kills.should.equal(2);
+        root.game_1.kills.should.eql({ Bobby: 1, Gabby: -1 });
+    });
+
+    it("Linha Kill malformada é ignorada sem lançar nem contar", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:10 Kill: 2 3 7: sem formato',
+        ]);
+        root.game_1.total_kills.should.equal(0);
+    });
+});
