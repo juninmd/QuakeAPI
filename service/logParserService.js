@@ -75,28 +75,26 @@ function instanceKills(kills, playername) {
     }
 }
 
+// Nomes podem conter "by" ou "killed" (ex.: "Bobby"); ancora na estrutura da linha e na MOD final.
+const KILL_PARSE = /Kill: \d+ \d+ \d+: (.+?) killed (.+) by \S+\s*$/;
+
 function kill(round, x) {
+    const match = KILL_PARSE.exec(x);
+    if (!match) return;
     round.total_kills++;
-    getKills(round.kills, x);
+    getKills(round.kills, match[1], match[2]);
 }
 
-function getKills(kills, x) {
+function getKills(kills, killer, killed) {
+    instanceKills(kills, killed);
 
     // Suícidio
-    if (x.indexOf('<world>') !== -1) {
-        let killed = x.split('killed')[1].split('by')[0].trim();
-        instanceKills(kills, killed);
+    if (killer === '<world>') {
         kills[killed]--;
-    }
-    else {
-        let killer = x.split('killed')[0].split(':')[3].trim();
-        let killed = x.split('killed')[1].split('by')[0].trim();
-
-        instanceKills(kills, killed);
-        instanceKills(kills, killer);
-
-        if (killer != killed)
-            kills[killer]++;
+        return;
     }
 
+    instanceKills(kills, killer);
+    if (killer !== killed)
+        kills[killer]++;
 }
