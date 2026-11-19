@@ -81,6 +81,21 @@ describe("--= Parser =--", () => {
     });
 });
 
+describe("--= Parser (log truncado) =--", () => {
+
+    it("Eventos antes do primeiro InitGame são ignorados em vez de derrubar o parse", () => {
+        const root = logParserService.parseFile([
+            ' 0:05 ClientUserinfoChanged: 2 n\\Bob\\t\\0\\model\\x',
+            ' 0:06 Kill: 1 2 7: Alice killed Bob by MOD_ROCKET',
+            ' 0:10 InitGame: \\mapname\\q3dm17',
+            ' 0:20 ClientUserinfoChanged: 2 n\\Alice\\t\\0\\model\\x',
+        ]);
+        Object.keys(root).should.eql(['game_1']);
+        root.game_1.total_kills.should.equal(0);
+        root.game_1.players.should.eql(['Alice']);
+    });
+});
+
 describe("--= Módulos =--", () => {
 
     it("Leitura do arquivo", () => {
