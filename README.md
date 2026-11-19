@@ -53,11 +53,8 @@ flowchart LR
 ## ⚙️ Requisitos
 
 Antes de começar, certifique-se de ter as seguintes ferramentas instaladas:
-- [Node.js](https://nodejs.org/en/) (Recomendado versão LTS)
-- [Yarn](https://yarnpkg.com/pt-BR/) (Opcional, você pode usar o npm)
-
-> [!WARNING]
-> Com as dependências travadas no repositório (`express-load@1.1.15`), `node app.js` e `npm test` falham no carregamento com `TypeError: require.extensions.hasOwnProperty is not a function` no Node 20, 22 e 24 (e também no 12 e 14). Veja [Limitações conhecidas](#-limitações-conhecidas).
+- [Node.js](https://nodejs.org/en/) (versão LTS)
+- [pnpm](https://pnpm.io/) 10 (o repositório usa `pnpm-lock.yaml`; `npm` também funciona)
 
 ## 🚀 Instalação
 
@@ -66,9 +63,9 @@ Antes de começar, certifique-se de ter as seguintes ferramentas instaladas:
 3. Instale as dependências executando um dos comandos abaixo:
 
 ```bash
-npm install
+pnpm install
 # ou
-yarn install
+npm install
 ```
 
 ## 🌐 Como usar (API)
@@ -131,16 +128,17 @@ O arquivo lido é sempre `./games.log`, relativo ao diretório de onde o process
 
 O projeto utiliza o **Mocha** para a execução de testes unitários.
 
-Para rodar os testes, certifique-se de que o Mocha está instalado (pode ser globalmente ou via dependências do projeto) e execute o comando:
+O Mocha vem nas `devDependencies`; depois de instalar, rode:
 
 ```bash
-npm test
+pnpm test   # ou npm test
 ```
+
+O `app.js` só chama `listen` quando é o entrypoint, então a suíte (supertest) termina sozinha.
 
 ## ⚠️ Limitações conhecidas
 
-- O carregamento dos controllers depende do `express-load@1.1.15`, que chama `require.extensions.hasOwnProperty(...)`. Em versões atuais do Node `require.extensions` não tem protótipo, então o app não sobe. Rodando a mesma suíte com um shim externo (`Object.setPrototypeOf(require.extensions, Object.prototype)` via `node -r`) os 7 testes passam, o que indica que a lógica de parsing está correta e o problema é só o carregador.
-- O mocha não encerra o processo sozinho depois dos testes, porque `app.js` chama `app.listen`; use `--exit` se o comando travar.
+- Eventos que aparecem antes do primeiro `InitGame` (log truncado ou rotacionado) são ignorados.
 - O parsing relê o `games.log` inteiro a cada requisição, sem cache nem paginação.
 - Só os eventos `InitGame`, `ClientUserinfoChanged` e `killed` são interpretados; os demais eventos do log são ignorados.
 - O CORS libera qualquer origem (`*`) apenas para `GET`.
