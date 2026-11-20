@@ -98,6 +98,14 @@ describe("--= Parser (log truncado) =--", () => {
 
 describe("--= Módulos =--", () => {
 
+    it("Lê o games.log mesmo com a API iniciada fora da raiz do projeto", () => {
+        const cwd = process.cwd();
+        process.chdir(require('os').tmpdir());
+        return logParserService.getParsedFile()
+            .then(root => Object.keys(root).length.should.equal(21))
+            .finally(() => process.chdir(cwd));
+    });
+
     it("Leitura do arquivo", () => {
         return logReaderService.readFile(`./test/read.log`).then(data => {
             should.exist(data);

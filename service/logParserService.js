@@ -1,9 +1,13 @@
+var path = require('path');
 var logReaderService = require('./logReaderService');
+
+// Resolve pelo diretorio do projeto: com caminho relativo, iniciar a API fora da raiz dava ENOENT.
+const LOG_FILE = path.join(__dirname, '..', 'games.log');
 
 module.exports = {
     getParsedFile: () => {
         return new Promise((resolve, reject) => {
-            logReaderService.readFile(`./games.log`).then(data => {
+            logReaderService.readFile(LOG_FILE).then(data => {
                 let parsedFile = parseFile(data);
                 return resolve(parsedFile);
             }).catch(err => {
