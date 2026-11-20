@@ -95,6 +95,25 @@ describe("--= Parser =--", () => {
         root.game_1.total_kills.should.equal(0);
         root.game_1.players.should.containEql('killed');
     });
+
+    it("ClientUserinfoChanged sem nome é ignorado em vez de derrubar o parse", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:01 ClientUserinfoChanged: 2 ',
+            ' 0:02 ClientUserinfoChanged: 3 n\\Alice\\t\\0\\model\\x',
+        ]);
+        root.game_1.players.should.eql(['Alice']);
+    });
+
+    it("Nome terminado em 'n' não é truncado (ex.: 'Fasano Again')", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:01 ClientUserinfoChanged: 2 n\\Fasano Again\\t\\0\\model\\x',
+            ' 0:02 Kill: 2 3 7: Fasano Again killed Zeh by MOD_ROCKET',
+        ]);
+        root.game_1.players.should.eql(['Fasano Again']);
+        root.game_1.kills.should.eql({ 'Fasano Again': 1, Zeh: 0 });
+    });
 });
 
 describe("--= Parser (log truncado) =--", () => {
