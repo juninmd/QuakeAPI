@@ -57,8 +57,13 @@ function getInitGame(root, rounds) {
     return rounds;
 }
 
+// Linha truncada/sem o campo n\ nao pode derrubar o parse do log inteiro.
+const PLAYER_NAME = /ClientUserinfoChanged: \d+ n\\([^\\]*)/;
+
 function instancePlayers(round, x) {
-    let playername = x.split('n\\')[1].split('\\t')[0];
+    const match = PLAYER_NAME.exec(x);
+    if (!match) return;
+    let playername = match[1];
     getPlayers(round.players, playername);
     instanceKills(round.kills, playername);
 }
