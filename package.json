@@ -4,7 +4,7 @@
   "description": "Servi\u00e7o de consulta de logs Quake 3.",
   "main": "app.js",
   "scripts": {
-    "test": "mocha ./test/index.js"
+    "test": "mocha ./test/index.js ./test/cache.js"
   },
   "repository": {
     "type": "git",
