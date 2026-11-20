@@ -68,6 +68,22 @@ describe("--= Http =--", () => {
     });
 });
 
+describe("--= Erros =--", () => {
+
+    it("Falha inesperada na leitura responde 500 com corpo JSON útil", () => {
+        const original = logParserService.getParsedFile;
+        logParserService.getParsedFile = () => Promise.reject(new Error('ENOENT'));
+        return supertest(app)
+            .get(`/api/v${webconfig.version}/games`)
+            .expect(500)
+            .then(res => {
+                res.body.should.have.property('statusCode').equal(500);
+                res.body.should.have.property('erro');
+            })
+            .finally(() => { logParserService.getParsedFile = original; });
+    });
+});
+
 describe("--= Parser =--", () => {
 
     it("Linhas que não são Kill (nome ou chat com 'killed') não derrubam o parse", () => {
