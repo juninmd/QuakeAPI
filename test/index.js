@@ -68,6 +68,22 @@ describe("--= Http =--", () => {
     });
 });
 
+describe("--= Erros =--", () => {
+
+    it("Falha inesperada na leitura responde 500 com corpo JSON útil", () => {
+        const original = logParserService.getParsedFile;
+        logParserService.getParsedFile = () => Promise.reject(new Error('ENOENT'));
+        return supertest(app)
+            .get(`/api/v${webconfig.version}/games`)
+            .expect(500)
+            .then(res => {
+                res.body.should.have.property('statusCode').equal(500);
+                res.body.should.have.property('erro');
+            })
+            .finally(() => { logParserService.getParsedFile = original; });
+    });
+});
+
 describe("--= Parser =--", () => {
 
     it("Linhas que não são Kill (nome ou chat com 'killed') não derrubam o parse", () => {
@@ -97,6 +113,14 @@ describe("--= Parser (log truncado) =--", () => {
 });
 
 describe("--= Módulos =--", () => {
+
+    it("Lê o games.log mesmo com a API iniciada fora da raiz do projeto", () => {
+        const cwd = process.cwd();
+        process.chdir(require('os').tmpdir());
+        return logParserService.getParsedFile()
+            .then(root => Object.keys(root).length.should.equal(21))
+            .finally(() => process.chdir(cwd));
+    });
 
     it("Leitura do arquivo", () => {
         return logReaderService.readFile(`./test/read.log`).then(data => {
