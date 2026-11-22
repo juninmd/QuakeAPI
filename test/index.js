@@ -205,3 +205,18 @@ describe("--= Parser (nomes com 'by' ou 'killed') =--", () => {
         root.game_1.total_kills.should.equal(0);
     });
 });
+
+describe("--= Parser (chat com nomes de eventos) =--", () => {
+
+    it("Chat com 'InitGame'/'ClientUserinfoChanged' não cria partida nem jogador fantasma", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:01 ClientUserinfoChanged: 2 n\\Alice\\t\\0\\model\\x',
+            ' 0:02 say: Alice: InitGame ClientUserinfoChanged: 5 n\\Ghost\\t\\0',
+            ' 0:03 Kill: 1022 2 22: <world> killed Alice by MOD_TRIGGER_HURT',
+        ]);
+        Object.keys(root).should.eql(['game_1']);
+        root.game_1.players.should.eql(['Alice']);
+        root.game_1.total_kills.should.equal(1);
+    });
+});

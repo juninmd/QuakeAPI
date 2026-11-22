@@ -29,14 +29,17 @@ module.exports = {
     parseFile: (lines) => parseFile(lines)
 }
 
+// Ancora no formato "MM:SS Evento:" para chat (say) com o nome do evento nao abrir partida nem jogador.
 const KILL_LINE = /^\s*\d+:\d+ Kill: /;
+const INIT_GAME_LINE = /^\s*\d+:\d+ InitGame:/;
+const USERINFO_LINE = /^\s*\d+:\d+ ClientUserinfoChanged: /;
 
 function parseFile(lines) {
     let rounds = 0;
     let root = {};
     let players = [];
     lines.forEach((x) => {
-        if (x.indexOf('InitGame') !== -1) {
+        if (INIT_GAME_LINE.test(x)) {
             rounds = getInitGame(root, rounds);
         }
 
@@ -48,7 +51,7 @@ function parseFile(lines) {
             kill(round, x);
         }
 
-        if (x.indexOf('ClientUserinfoChanged') !== -1)
+        if (USERINFO_LINE.test(x))
             instancePlayers(round, x);
     });
     return root;
@@ -64,7 +67,7 @@ function getInitGame(root, rounds) {
 }
 
 // Linha truncada/sem o campo n\ nao pode derrubar o parse do log inteiro.
-const PLAYER_NAME = /ClientUserinfoChanged: \d+ n\\([^\\]*)/;
+const PLAYER_NAME = /^\s*\d+:\d+ ClientUserinfoChanged: \d+ n\\([^\\]*)/;
 
 function instancePlayers(round, x) {
     const match = PLAYER_NAME.exec(x);
