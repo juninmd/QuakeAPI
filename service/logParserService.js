@@ -84,8 +84,9 @@ function getPlayers(players, playername) {
 }
 
 function instanceKills(kills, playername) {
-    if (kills[playername] == null) {
-        kills[playername] = 0;
+    // Own-property check + defineProperty: names like "constructor" or "__proto__" must not hit the prototype.
+    if (!Object.prototype.hasOwnProperty.call(kills, playername)) {
+        Object.defineProperty(kills, playername, { value: 0, writable: true, enumerable: true, configurable: true });
     }
 }
 

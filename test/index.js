@@ -96,6 +96,22 @@ describe("--= Parser =--", () => {
         root.game_1.players.should.containEql('killed');
     });
 
+    it("Nomes como constructor/toString/__proto__ contam kills como qualquer outro", () => {
+        const root = logParserService.parseFile([
+            ' 0:00 InitGame: \\mapname\\q3dm17',
+            ' 0:10 ClientUserinfoChanged: 2 n\\constructor\\t\\0',
+            ' 0:11 ClientUserinfoChanged: 3 n\\toString\\t\\0',
+            ' 0:12 ClientUserinfoChanged: 4 n\\__proto__\\t\\0',
+            ' 0:20 Kill: 2 3 7: constructor killed toString by MOD_ROCKET_SPLASH',
+            ' 0:21 Kill: 4 3 7: __proto__ killed toString by MOD_ROCKET_SPLASH',
+        ]);
+        const kills = root.game_1.kills;
+        kills.constructor.should.equal(1);
+        kills.toString.should.equal(0);
+        Object.prototype.hasOwnProperty.call(kills, '__proto__').should.be.true();
+        kills['__proto__'].should.equal(1);
+    });
+
     it("ClientUserinfoChanged sem nome é ignorado em vez de derrubar o parse", () => {
         const root = logParserService.parseFile([
             ' 0:00 InitGame: \\mapname\\q3dm17',
